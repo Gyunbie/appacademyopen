@@ -3,11 +3,9 @@ class Item
   attr_reader :deadline, :done
 
   def self.valid_date?(str)
-    arr = str.split("-")
-
-    if arr[0].size != 4 || !(1..12).include?(arr[1].to_i) || !(1..31).include?(arr[2].to_i)
-      return false
-    end
+    arr = str.split("-").map(&:to_i)
+    y, m, d = arr
+    return false if arr.size != 3 || !(1..12).include?(arr[1]) || !(1..31).include?(arr[2])
     true
   end
 

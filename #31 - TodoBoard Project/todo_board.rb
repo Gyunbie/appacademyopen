@@ -1,20 +1,21 @@
 require_relative "list.rb"
 
 class TodoBoard
-  def initialize(label)
+  def initialize
     @board = Hash.new
   end
 
   def get_command
     print("Enter a command > ")
     cmd, label, *args = gets.chomp.split(" ")
+
     case cmd
+    when "ls"
+      @board.each_key { |label| puts " " + label }
+    when "showall"
+      @board.each_value(&:print)
     when "mklist"
       @board[label] = List.new(label)
-    when "ls"
-      @board.each { |k, v| puts v.label }
-    when "showall"
-      @board.each { |k, v| v.print }
     when "mktodo"
       @board[label].add_item(*args)
     when "toggle"
@@ -54,5 +55,4 @@ class TodoBoard
   end
 end
 
-todo = TodoBoard.new("Groceries")
-todo.run
+todo = TodoBoard.new.run

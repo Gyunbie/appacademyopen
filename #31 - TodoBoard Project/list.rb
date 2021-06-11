@@ -4,12 +4,12 @@ class List
   SEPARATOR = "-" * 44
   CHECKMARK = "\u2713".force_encoding('utf-8')
 
+  attr_accessor :label
+
   def initialize(label)
     @label = label
     @items = []
   end
-
-  attr_accessor :label
 
   def add_item(title, deadline, description = "")
     return false unless Item.valid_date?(deadline)
@@ -18,7 +18,7 @@ class List
   end
 
   def size
-    return @items.size
+    @items.size
   end
 
   def valid_index?(index)
@@ -53,13 +53,12 @@ class List
   end
 
   def print_full_item(index)
-    if valid_index?(index)
-      item = @items[index]
-      is_done = item.done ? CHECKMARK : " "
-      puts SEPARATOR
-      puts "#{item.title.ljust(20)} #{item.deadline} [#{is_done}]"
-      puts "#{item.description}"
-    end
+    item = @items[index]
+    return if item.nil?
+    is_done = item.done ? CHECKMARK : " "
+    puts SEPARATOR
+    puts "#{item.title.ljust(20)} #{item.deadline} [#{is_done}]"
+    puts "#{item.description}"
   end
 
   def print_priority
@@ -72,18 +71,17 @@ class List
     while amt != 0 && idx > 0
       idx -= 1
       amt -= 1
-      @items[idx], @items[idx + 1] = @items[idx + 1], @items[idx]
+      swap(index, index + 1)
     end
     true
   end
 
   def down(index, amt = 1)
     return false unless valid_index?(index)
-
     while amt != 0 && idx < @items.size - 1
       idx += 1
       amt -= 1
-      @items[idx], @items[idx - 1] = @items[idx - 1], @items[idx]
+      swap(index, index - 1)
     end
     true
   end
@@ -93,12 +91,12 @@ class List
   end
 
   def toggle_item(index)
-    @items[index].toggle
+    item = @items[index]
+    item.toggle unless item.nil?
   end
 
   def remove_item(index)
     return false unless valid_index?(index)
-
     @items.delete_at(index)
     true
   end
@@ -107,3 +105,4 @@ class List
     @items.delete_if(&:done)
   end
 end
+showall
