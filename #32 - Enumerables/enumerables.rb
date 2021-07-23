@@ -81,4 +81,3 @@ class Array
     new_arr
   end
 end
-
